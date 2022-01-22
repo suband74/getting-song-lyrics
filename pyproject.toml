@@ -1,0 +1,81 @@
+[tool.poetry]
+name = "getting-song-lyrics"
+version = "0.1.0"
+description = "Song lyrics project"
+authors = ["suband74 <suband@mail.ru>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/suband74/getting-song-lyrics"
+repository = "https://github.com/suband74/getting-song-lyrics"
+keywords = ["lyrics"]
+
+[tool.poetry.scripts]
+getting-song-lyrics = "getting_song_lyrics.main:get_song_lyrics"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "^8.0.3"
+requests = "^2.26.0"
+bs4 = "^0.0.1"
+wordcloud = "^1.8.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+coverage = {extras = ["toml"], version = "^6.2"}
+pytest-cov = "^3.0.0"
+flake8 = "^4.0.1"
+black = "^21.12b0"
+flake8-bugbear = "^21.11.29"
+flake8-builtins = "^1.5.3"
+flake8-commas = "^2.1.0"
+flake8-import-order = "^0.18.1"
+flake8-polyfill = "^1.0.2"
+flake8-variables-names = "^0.0.4"
+requests-mock = {extras = ["fixture"], version = "^1.9.3"}
+mypy = "^0.931"
+types-requests = "^2.27.7"
+
+[tool.coverage.paths]
+source = ["src", "*/site-packages"]
+
+[tool.coverage.run]
+branch = true
+source = ["getting_song_lyrics"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 90
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''
+
+[tool.flake8]
+extend-ignore = "E203, E266, W503"
+# line length is intentionally set to 80 here because black uses Bugbear
+# See https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length for more details
+max-line-length = 88
+max-complexity = 10
+extend-select = "C90, E, F, W"
