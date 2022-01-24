@@ -18,14 +18,14 @@ def runner():
 
 
 @pytest.fixture
-def data_dir():
+def data_dir() -> Path:
     """[Making the string with the full path to the file]"""
     test_data_dir = Path(__file__).resolve().parent
     return test_data_dir
 
 
 @pytest.fixture
-def sample_requests(requests_mock, data_dir):
+def sample_requests(requests_mock, data_dir:Path) -> None:
     """[Make two "requests_mock"]"""
     data_dir = Path(__file__).resolve().parent
     with open(data_dir / "mock_file.json") as content:
@@ -38,11 +38,11 @@ def sample_requests(requests_mock, data_dir):
     return requests_mock
 
 
-def test_get_lyrics(sample_requests):
+def test_get_lyrics(sample_requests) -> None:
     """[Test of the function with the correct arguments]"""
     result = {}
 
-    def write_to_local_variable(lyrics, ouput_path):
+    def write_to_local_variable(lyrics: str, ouput_path: str) -> None:
         result[ouput_path] = lyrics
 
     output_path = "some_file.txt"
@@ -51,7 +51,7 @@ def test_get_lyrics(sample_requests):
     assert result[output_path] == "He deals the cards as a meditation"
 
 
-def test_get_lyrics_2(requests_mock, data_dir):
+def test_get_lyrics_2(requests_mock, data_dir: Path) -> None:
     """[Test of the function with a non-existent song]"""
     with pytest.raises(RuntimeError) as exc:
 
@@ -60,7 +60,7 @@ def test_get_lyrics_2(requests_mock, data_dir):
 
         result = {}
 
-        def write_to_local_variable(lyrics, ouput_path):
+        def write_to_local_variable(lyrics: str, ouput_path:str) -> None:
             result[ouput_path] = lyrics
 
         output_path = "some_file.txt"
@@ -69,7 +69,7 @@ def test_get_lyrics_2(requests_mock, data_dir):
     assert ("Nothing found by 'sdkjbsdklfjg'") == str(exc.value)
 
 
-def test_get_lyrics_3(requests_mock, data_dir):
+def test_get_lyrics_3(requests_mock, data_dir: Path) -> None:
     """[Test of the function in case of a server error]"""
     with pytest.raises(RuntimeError) as exc:
 
@@ -78,7 +78,7 @@ def test_get_lyrics_3(requests_mock, data_dir):
 
         result = {}
 
-        def write_to_local_variable(lyrics, ouput_path):
+        def write_to_local_variable(lyrics: str, ouput_path: str) -> None:
             result[ouput_path] = lyrics
 
         output_path = "some_file.txt"
@@ -87,7 +87,7 @@ def test_get_lyrics_3(requests_mock, data_dir):
     assert ("Cannot get response by request with reason None") == str(exc.value)
 
 
-def test_generate_word_cloud(tmp_path):
+def test_generate_word_cloud(tmp_path: Path) -> None:
 
     generate_word_cloud("a day in a life", tmp_path / "test.png")
 
@@ -97,7 +97,7 @@ def test_generate_word_cloud(tmp_path):
     assert d_content != None
 
 
-def test_retrieve_bearer_auth_config(tmp_path):
+def test_retrieve_bearer_auth_config(tmp_path: Path) -> None:
     """[Test for generating an authorization key from a file]"""
     config_path = tmp_path / "cfg.json"
     bearer_expected = "anything"
@@ -107,7 +107,7 @@ def test_retrieve_bearer_auth_config(tmp_path):
     assert bearer_actual == bearer_expected
 
 
-def test_retrieve_bearer_auth_env(monkeypatch):
+def test_retrieve_bearer_auth_env(monkeypatch) -> None:
     """[Test for generating an authorization key from an environment variable]"""
     bearer_expected = "anything"
     monkeypatch.setenv("GENIUS_API_BEARER", bearer_expected)
@@ -115,43 +115,43 @@ def test_retrieve_bearer_auth_env(monkeypatch):
     assert bearer_actual == bearer_expected
 
 
-def test_retrieve_bearer_auth_fail():
+def test_retrieve_bearer_auth_fail() -> None:
     """[Test in the absence of an authorization key]"""
     with pytest.raises(RuntimeError) as exc:
         retrieve_bearer_auth(None)
     assert ("Unable to get bearer auth from environment") == str(exc.value)
 
 
-def test_main_succeeds(runner: CliRunner, sample_requests, data_dir):
+def test_main_succeeds(runner: CliRunner, sample_requests) -> None:
     """[The test of the application with correct data]"""
     result = runner.invoke(
         get_song_lyrics,
-        ["anything", "-o", "result.png", "-c", data_dir / "mock_key.json"],
+        ["anything", "-o", "result.png", "-c", "tests/mock_key.json"],
     )
 
     assert result.exit_code == 0
 
 
-def test_main_not_succeeds1(runner: CliRunner, data_dir):
+def test_main_not_succeeds1(runner: CliRunner) -> None:
     """[The test of the application with an incorrect authorization key]"""
     result = runner.invoke(
-        get_song_lyrics, ["anything", "-o", "result.png", "-c", data_dir / "wrong_key.json"]
+        get_song_lyrics, ["anything", "-o", "result.png", "-c", "tests/wrong_key.json"]
     )
 
     assert result.exit_code == 1
 
 
-def test_main_fail_bearer2(runner: CliRunner):
+def test_main_fail_bearer2(runner: CliRunner) -> None:
     """[[The test of the application without an authorization key]"""
     result = runner.invoke(get_song_lyrics, ["anything", "-o", "result.png"])
     assert result.exit_code == 0
 
 
-def test_main_succeeds(runner: CliRunner, sample_requests, data_dir):
+def test_main_not_succeeds2(runner: CliRunner, sample_requests) -> None:
     """[The test of the application with an incorrect output file extension]"""
     result = runner.invoke(
         get_song_lyrics,
-        ["anything", "-o", "result.jpg", "-c", data_dir / "mock_key.json"],
+        ["anything", "-o", "result.jpg", "-c", "tests/mock_key.json"],
     )
 
     assert result.exit_code == 0

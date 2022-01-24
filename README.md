@@ -1,5 +1,5 @@
 [![Style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-![Tests](https://github.com/suband74/getting-song-lyrics/actions/workflows/python-app.yml/badge.svg)
+[![Tests](https://github.com/suband74/getting-song-lyrics/actions/workflows/tests.yml/badge.svg)](https://github.com/suband74/getting-song-lyrics/actions?workflow=Tests)
 
 
 # Проект в виде консольной утилиты для получения текстов песен.
@@ -7,7 +7,7 @@
 - Проект реализует получения текста песни:
   - в виде текста
   - в виде картинки "Облако слов"
-- Слова песен получаются с API сайта [Genius]https://genius.com
+- Слова песен получаются с API сайта [Genius](https://genius.com)
 
 
 ### Установка проекта на локальный компьютер
@@ -28,7 +28,7 @@
       - Расширение файла :
         - "txt" для получения простого текста песни
         - "png" для получения текста в виде "Облака слов"
-   2. Путь до файла с ключом авторизации на сайте "Genius"
+   2. Путь до файла с ключом авторизации на сайте "Genius" с опцией "-c"
    3. Первые символы названия песни (чем больше тем лучше) заключенные в ковычки.
 - Пример ввода команды: `python3 src/getting_song_lyrics/main.py "shape of my heart" -o result.png -c key.json` для получения картинки
 - Пример ввода команды: `python3 src/getting_song_lyrics/main.py -o result.txt -c key.json "my heart my soul modern talking"` для получения текста
